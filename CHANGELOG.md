@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/laravel/compare/v12.0.6...12.x)
+## [Unreleased](https://github.com/laravel/laravel/compare/2025-05-07-release...master)
+
+## [2025-05-07-release](https://github.com/laravel/laravel/compare/v12.0.6...2025-05-07-release) - 2025-05-07
+
+user registration backend added
 
 ## [v12.0.6](https://github.com/laravel/laravel/compare/v12.0.5...v12.0.6) - 2025-04-08
 
