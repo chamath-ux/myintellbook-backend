@@ -9,7 +9,13 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+       $this->userService = new \App\Services\UserService();
+    }
     public function userRegister(RegisterRequest $request){
-        dd('ok');
+        $user = $this->userService->registerUser($request->validated());
+        return $user;
     }
 }
