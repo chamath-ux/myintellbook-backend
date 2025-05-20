@@ -21,7 +21,7 @@ class UserService{
             $user->generateVerificationToken();
             $token = $user->id;
             if($token) {
-                RemoveVerificationToken::dispatch($token)->delay(now()->addMinute());
+                RemoveVerificationToken::dispatch($token)->delay(now()->addMinutes(60));
             }
 
             return response()->json([
@@ -48,6 +48,7 @@ class UserService{
             $user->email_verified_at = now();
             $user->email_verification_token = null;
             $user->save();
+            dd('here');
             return response()->json([
                 'code' => 200,
                 'status' => true,

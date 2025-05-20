@@ -25,6 +25,7 @@ class UserController extends Controller
 
     public function verifyEmail(Request $request){ 
         $user = $this->userService->verifyEmail($request->token);
+        return $user;
     }
     public function userLogin(LoginRequest $request){
         $user = $this->userService->loginUser($request->validated());
