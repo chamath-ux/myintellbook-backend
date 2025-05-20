@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\PasswordResetTokenJob;
+use App\Jobs\RemoveVerificationToken;
 
 class UserService{
 
@@ -18,6 +19,11 @@ class UserService{
                 throw new \Exception('User registration failed');
             }
             $user->generateVerificationToken();
+            $token = $user->id;
+            if($token) {
+                RemoveVerificationToken::dispatch($token)->delay(now()->addMinute());
+            }
+
             return response()->json([
                 'code' => 200,
                 'status' => true,
