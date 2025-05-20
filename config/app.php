@@ -13,7 +13,8 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'MyIntellBook'),
+    'verification_link' => env('EMAIL_VERIFICATION_URL',''),
 
     /*
     |--------------------------------------------------------------------------

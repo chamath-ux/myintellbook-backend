@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\PasswordResetTokenJob;
+use App\Jobs\RemoveVerificationToken;
 
 class UserService{
 
@@ -17,6 +18,12 @@ class UserService{
             if(!$user) {
                 throw new \Exception('User registration failed');
             }
+            $user->generateVerificationToken();
+            $token = $user->id;
+            if($token) {
+                RemoveVerificationToken::dispatch($token)->delay(now()->addMinute());
+            }
+
             return response()->json([
                 'code' => 200,
                 'status' => true,
@@ -32,6 +39,29 @@ class UserService{
         }
     }
 
+    public function verifyEmail($token){ 
+        try{
+            $user = User::where('email_verification_token', $token)->first();
+            if(!$user) {
+                throw new \Exception('Invalid token');
+            }
+            $user->email_verified_at = now();
+            $user->email_verification_token = null;
+            $user->save();
+            return response()->json([
+                'code' => 200,
+                'status' => true,
+                'message' => 'Email verified successfully',
+            ], 200);
+        }catch(\Exception $e){
+            log::error('UserService @verifyEmail: '.$e->getMessage());
+            return response()->json([
+                'code' => 500,
+                'status' => false,
+                'message' => 'Email verification failed',
+            ]);
+        }
+    }
     public function loginUser($user){
         try{
             if (Auth::attempt(['email' => $user['email'], 'password' => $user['password']])) {
