@@ -1,6 +1,16 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/laravel/compare/2025-05-17-release...master)
+## [Unreleased](https://github.com/laravel/laravel/compare/2025-05-20-latest-release-all...master)
+
+## [2025-05-20-latest-release-all](https://github.com/laravel/laravel/compare/2025-05-17-release...2025-05-20-latest-release-all) - 2025-05-20
+
+1. user registration backend function with generate token and sent to email
+2. user registration token expiration after one hour function
+3. user login functions backend
+4. password reset token generation without sent email
+5. password reset token expiration after one hour
+6. password set new password function check token validations
+7. adding tests for each functions feature tests without adding test for password reset
 
 ## [2025-05-17-release](https://github.com/laravel/laravel/compare/2025-05-07-release...2025-05-17-release) - 2025-05-17
 
