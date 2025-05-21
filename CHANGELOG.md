@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/laravel/compare/2025-05-20-latest-release-all...master)
+## [Unreleased](https://github.com/laravel/laravel/compare/2025-05-21-release...master)
+
+## [2025-05-21-release](https://github.com/laravel/laravel/compare/2025-05-20-latest-release-all...2025-05-21-release) - 2025-05-21
+
+1. this has a password reset link
 
 ## [2025-05-20-latest-release-all](https://github.com/laravel/laravel/compare/2025-05-17-release...2025-05-20-latest-release-all) - 2025-05-20
 
