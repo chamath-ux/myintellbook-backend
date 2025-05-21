@@ -48,7 +48,6 @@ class UserService{
             $user->email_verified_at = now();
             $user->email_verification_token = null;
             $user->save();
-            dd('here');
             return response()->json([
                 'code' => 200,
                 'status' => true,
@@ -106,6 +105,7 @@ class UserService{
                 'token' => Str::random(60),
                 'created_at' => now(),
             ]);
+            $resetLink->sendPasswordResetEmail($link['email'], $resetLink->token);
             if(!$resetLink) {
                 throw new \Exception('Password reset link failed');
             }
@@ -128,7 +128,8 @@ class UserService{
             ], 500);
         }
     }
-    public function passwordReset($user, $token){
+    public function passwordReset($request, $token){
+
         try{
             $passwordResetToken = PasswordResetToken::where('token', $token)->first();
             if(!$passwordResetToken) {
@@ -138,9 +139,9 @@ class UserService{
             if(!$user) {
                 throw new \Exception('User not found');
             }
-            $user->update([
-                'password' => bcrypt($user['password']),
-            ]);
+            $user->password = $request['password'];
+            $user->save();
+            $passwordResetToken->where('token', $token)->forceDelete();
             return response()->json([
                 'code' => 200,
                 'status' => true,
