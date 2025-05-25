@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Jobs\PasswordResetTokenJob;
 use App\Jobs\RemoveVerificationToken;
 
+
 class UserService{
 
     public function registerUser($user){
@@ -62,17 +63,27 @@ class UserService{
             ]);
         }
     }
-    public function loginUser($user){
+    public function loginUser($request){
         try{
+
+            $user = User::where('email', $request['email'])->first();
+
+            if(!$user || !\Hash::check($request['password'], $user->password)) {
+                throw new \Exception('Invalid credentials');
+            }
+
+            $token = $user->apiTokens()->first()->tokenGenerate($user);
+            return response()->json([
+                'code' => 200,
+                'status' => true,
+                'token' => $token,
+                'message' => 'User logged in successfully',
+            ], 200);
+
             if (Auth::attempt(['email' => $user['email'], 'password' => $user['password']])) {
 
                 $token = Auth()->user()->createToken('barerToken')->plainTextToken;
-                return response()->json([
-                    'code' => 200,
-                    'status' => true,
-                    'token' => $token,
-                    'message' => 'User logged in successfully',
-                ], 200);
+                
             }else{
                 throw new \Exception('Invalid credentials');
             }
