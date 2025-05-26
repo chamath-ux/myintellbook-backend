@@ -1,6 +1,13 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/laravel/compare/2025-05-21-release...master)
+## [Unreleased](https://github.com/laravel/laravel/compare/2025-05-25-release...master)
+
+## [2025-05-25-release](https://github.com/laravel/laravel/compare/2025-05-21-release...2025-05-25-release) - 2025-05-25
+
+1. add ApiToken class
+2. add ApiTokenAuthMIddleware
+3. register middleware alias as auth:token
+4. add token config file in config
 
 ## [2025-05-21-release](https://github.com/laravel/laravel/compare/2025-05-20-latest-release-all...2025-05-21-release) - 2025-05-21
 
