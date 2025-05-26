@@ -1,6 +1,11 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/laravel/compare/2025-05-25-release...master)
+## [Unreleased](https://github.com/laravel/laravel/compare/2025-05-26-release...master)
+
+## [2025-05-26-release](https://github.com/laravel/laravel/compare/2025-05-25-release...2025-05-26-release) - 2025-05-26
+
+1. check user status
+2. set current user to auth user
 
 ## [2025-05-25-release](https://github.com/laravel/laravel/compare/2025-05-21-release...2025-05-25-release) - 2025-05-25
 
