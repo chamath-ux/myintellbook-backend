@@ -7,4 +7,9 @@ Route::post('/verify-email', [\App\Http\Controllers\UserController::class, 'veri
 Route::post('/login', [\App\Http\Controllers\UserController::class, 'userLogin']);
 Route::post('/password/reset', [\App\Http\Controllers\UserController::class, 'passwordResetLink']);
 Route::post('/password/reset/{token}', [\App\Http\Controllers\UserController::class, 'passwordReset']);
+
+
  
+Route::middleware('auth.token')->group(function () {
+    Route::get('/user', [\App\Http\Controllers\UserController::class, 'userCheck']);
+});

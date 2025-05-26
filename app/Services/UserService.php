@@ -72,21 +72,14 @@ class UserService{
                 throw new \Exception('Invalid credentials');
             }
 
-            $token = $user->apiTokens()->first()->tokenGenerate($user);
+            $apiToken = new \App\Models\ApiToken();
+            $token = $apiToken->tokenGenerate($user);
             return response()->json([
                 'code' => 200,
                 'status' => true,
                 'token' => $token,
                 'message' => 'User logged in successfully',
             ], 200);
-
-            if (Auth::attempt(['email' => $user['email'], 'password' => $user['password']])) {
-
-                $token = Auth()->user()->createToken('barerToken')->plainTextToken;
-                
-            }else{
-                throw new \Exception('Invalid credentials');
-            }
             
             
         }catch(\Exception $e){
@@ -160,6 +153,28 @@ class UserService{
             ], 200);
         }catch(\Exception $e){
             log::error('UserService @passwordReset: '.$e->getMessage());
+            return response()->json([
+                'code' => 500,
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function userCheck($request){
+        try{
+            $user = Auth::user();
+            if(!$user) {
+                throw new \Exception('User not authenticated');
+            }
+            return response()->json([
+                'code' => 200,
+                'status' => true,
+                'data' => $user,
+                'message' => 'User authenticated successfully',
+            ], 200);
+        }catch(\Exception $e){
+            log::error('UserService @userCheck: '.$e->getMessage());
             return response()->json([
                 'code' => 500,
                 'status' => false,
