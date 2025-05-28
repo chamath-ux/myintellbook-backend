@@ -37,4 +37,22 @@ class ProfileService
             ], 500);
         }
     }
+
+    public function getUserData($user_id){
+        try{
+            $user = Profile::where('user_id', $user_id)->first();
+            return response()->json([
+                'code' => 200,
+                'status' => true,
+                'data' => $user,
+            ], 200);
+        }catch(\Exception $e){
+            log::error('CategoryService @getCategories: '.$e->getMessage());
+            return response()->json([
+                'code' => 500,
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

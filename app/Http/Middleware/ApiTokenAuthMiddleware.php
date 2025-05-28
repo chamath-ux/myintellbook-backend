@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\ApiToken;
+use Illuminate\Support\Facades\Auth;
 
 class ApiTokenAuthMiddleware
 {
@@ -17,9 +18,10 @@ class ApiTokenAuthMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $authHeader = $request->header('Authorization');
+ 
 
         if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Unauthorized1'], 401);
         }
 
         $token = substr($authHeader, 7); // remove "Bearer "
@@ -35,7 +37,7 @@ class ApiTokenAuthMiddleware
         }
 
         // Set the authenticated user
-        $request->setUserResolver(fn() => $apiToken->user);
+        Auth::setUser($apiToken->user);
 
         return $next($request);
     }

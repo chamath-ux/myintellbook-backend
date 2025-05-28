@@ -41,4 +41,11 @@ class UserController extends Controller
         $user = $this->userService->passwordReset($request->validated(), $token);
         return $user;
     }
+
+    public function userCheck(Request $request){
+      
+        $user = $this->userService->userCheck($request);
+        return $user;
+
+    }
 }

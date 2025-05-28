@@ -16,4 +16,10 @@ class ProfileController extends Controller
             $profile = $this->profileService->insertProfile($request->validated());
             return $profile;
     }
+
+    public function userData(Request $request)
+    {
+        $user = $this->profileService->getUserData($request->user()->id);
+        return $user;
+    }
 }
