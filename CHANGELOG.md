@@ -1,6 +1,8 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/laravel/compare/2025-05-26-release...master)
+## [Unreleased](https://github.com/laravel/laravel/compare/2025-05-28-release...master)
+
+## [2025-05-28-release](https://github.com/laravel/laravel/compare/2025-05-26-release...2025-05-28-release) - 2025-05-28
 
 ## [2025-05-26-release](https://github.com/laravel/laravel/compare/2025-05-25-release...2025-05-26-release) - 2025-05-26
 
