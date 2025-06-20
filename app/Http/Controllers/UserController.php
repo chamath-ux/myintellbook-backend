@@ -48,4 +48,10 @@ class UserController extends Controller
         return $user;
 
     }
+
+    public function logOut()
+    {
+        $user= $this->userService->logOut();
+        return $user;
+    }
 }

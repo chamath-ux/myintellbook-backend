@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\ApiToken;
 use App\Models\PasswordResetToken;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
@@ -175,6 +176,27 @@ class UserService{
             ], 200);
         }catch(\Exception $e){
             log::error('UserService @userCheck: '.$e->getMessage());
+            return response()->json([
+                'code' => 500,
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function logOut()
+    {
+        try{
+            $tokens = ApiToken::with('user')->where('user_id',Auth::user()->id)->delete();
+            // $tokens->delete();
+            return response()->json([
+                'code' => 200,
+                'status' => true,
+                'message' => 'User log out  successfully',
+            ], 200);
+        }catch(\Exception $e)
+        {
+            log::error('UserService @logOut: '.$e->getMessage());
             return response()->json([
                 'code' => 500,
                 'status' => false,

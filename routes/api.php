@@ -18,4 +18,16 @@ Route::middleware('auth.token')->group(function () {
     Route::get('/professions/{category_id}',[\App\Http\Controllers\CategoryController::class, 'getProfessions']);
     Route::post('/insert-profile',[\App\Http\Controllers\ProfileController::class, 'insert']);
     Route::get('/user-data', [\App\Http\Controllers\ProfileController::class, 'userData']);
+    Route::post('/edit-general-info',[\App\Http\Controllers\ProfileController::class,'editGeneralInfo']);
+    Route::get('/log-out',[\App\Http\Controllers\UserController::class, 'logOut']);
+    Route::get('/get-general-info',[\App\Http\Controllers\ProfileController::class,'gtGeneralInfo']);
+    Route::post('/add-work-experiance',[\App\Http\Controllers\ProfileController::class,'addWorkExperiance']);
+    Route::get('/get-work-experiances',[\App\Http\Controllers\ProfileController::class, 'getExperiances']);
+    Route::get('/get-details-experiance/{id}',[\App\Http\Controllers\ProfileController::class,'getExperianceDetails']);
+    Route::get('edit-details-experiance/{id}',[\App\Http\Controllers\ProfileController::class,'editExperianceDetails']);
+    Route::get('/delete-experiance/{id}',[\App\Http\Controllers\ProfileController::class,'deleteExperiance']);
+    Route::post('/add-education-details',[\App\Http\Controllers\ProfileController::class, 'addEducation']);
+    Route::get('/get-education-details',[\App\Http\Controllers\ProfileController::class, 'getEducationDetails']);
+    Route::get('/get-education-detail/{id}',[\App\Http\Controllers\ProfileController::class,'getEducationDetail']);
+    Route::get('/delete-education/{id}',[\App\Http\Controllers\ProfileController::class,'deleteEducation']);
 });
