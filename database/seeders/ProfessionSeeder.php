@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Profession;
+use App\Models\profession;
 
 class ProfessionSeeder extends Seeder
 {
@@ -13,7 +13,7 @@ class ProfessionSeeder extends Seeder
      */
     public function run(): void
     {
-        Profession::create([
+        profession::create([
             'name'=>'Doctor',
             'category_id'=>1
         ]);
