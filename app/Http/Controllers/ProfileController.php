@@ -57,9 +57,9 @@ class ProfileController extends Controller
         return $user;
     }
 
-    public function editExperianceDetails($id, WorkExperianceRequest $request)
+    public function editExperianceDetails(WorkExperianceRequest $request)
     {
-        $user = $this->profileService->editExperianceDetails($id, $request);
+        $user = $this->profileService->editExperianceDetails($request);
         return $user;
     }
 
@@ -90,6 +90,54 @@ class ProfileController extends Controller
     public function deleteEducation($id)
     {
         $user = $this->profileService->deleteEducation($id);
+        return $user;
+    }
+
+    public function editEducation(EducationRequest $request)
+    {
+        $user = $this->profileService->editEducation($request);
+        return $user;
+    }
+
+    public function addSkill(Request $request)
+    {
+        $user = $this->profileService->addSkill($request);
+        return $user;
+    }
+
+    public function getSkills()
+    {
+        $user = $this->profileService->getSkills();
+        return $user;
+    }
+
+    public function deleteSkill($id)
+    {
+        $user = $this->profileService->deleteSkill($id);
+        return $user;
+    }
+
+    public function uploadProfileImage(Request $request)
+    {
+        $user = $this->profileService->uploadProfileImage($request);
+        return $user;
+    }
+
+    public function uploadCoverImage(Request $request)
+    {
+        $user = $this->profileService->uploadCoverImage($request);
+        return $user;
+    }
+
+    public function checkProfileCompleted()
+    {
+         $user = $this->profileService->checkProfileCompleted();
+        return $user;
+    }
+
+    public function basicInfo()
+    {
+        $user = $this->profileService->basicInfo();
         return $user;
     }
 }

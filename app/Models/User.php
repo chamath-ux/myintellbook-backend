@@ -11,6 +11,9 @@ use Illuminate\Support\Str;
 use App\Mail\confirmMail;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Profile;
+use App\Models\WorkExperiance;
+use App\Models\Post;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -88,5 +91,15 @@ class User extends Authenticatable
     public function profile(): HasOne
     {
         return $this->hasOne(Profile::class);
+    }
+
+    public function workExperiances()
+    {
+        return $this->hasMany(WorkExperiance::class);
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
     }
 }

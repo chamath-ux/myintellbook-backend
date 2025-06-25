@@ -4,12 +4,73 @@ namespace App\Services;
 use App\Models\Profile;
 use App\Models\WorkExperiance;
 use App\Models\Education;
+use App\Models\Skill;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Post;
 use Carbon\Carbon;
 
 class ProfileService
 {
+
+    public function __construct()
+    {
+        $this->postService = new \App\Services\PostService();
+    }
+
+    public function checkProfileCompleted()
+    {
+        $attributes = [
+            'generalInfo'=>
+            [
+                'first_name' =>true,
+                'last_name'=>false,
+                'gender'=>false,
+                'birth_date'=>false,
+            ],
+            'coverImage'=>true,
+            'profileImage'=>false,
+            'workExperiance' => false,
+            'education'=> false,
+            'skills'=>false
+        ];
+        return response()->json([
+                'code' => 200,
+                'status' => true,
+                'data' => $attributes,
+        ], 200);
+
+    }
+
+    public function basicInfo()
+    {
+
+        $profileDetails = User::with(['workExperiances' => function ($query) {
+                $query->where('currently_working', 1);
+        }])->where('id',Auth::user()->id)->get();
+
+        $Details = $profileDetails->map(function($detail){
+                return [
+                    'first_name'=>$detail->profile['first_name'],
+                    'last_name'=>$detail->profile['last_name'],
+                    'profile_image'=>$detail->profile['profile_image'],
+                    'cover_image'=>$detail->profile['cover_image'],
+                    'currently_working'=> $detail->workExperiances->map(function($experiance){
+                        return[
+                            'company'=>$experiance['company'],
+                            'location'=>$experiance['location']
+                        ];
+                    }),
+                    'posts'=>$this->postService->postDetails($detail->posts)
+                ];
+        });
+        return response()->json([
+                'code' => 200,
+                'status' => true,
+                'data' => $Details,
+            ], 200);
+    }
     public function insertProfile($request)
     {
         try{
@@ -119,6 +180,10 @@ class ProfileService
     public function addWorkExperiance($request)
     {
         try{
+            if($request['currently_working']){
+                    WorkExperiance::where('currently_working',1)->update(['currently_working'=>0]);
+            }
+
             $work = new WorkExperiance();
             $work->title = $request['title'];
             $work->company = $request['company'];
@@ -129,10 +194,16 @@ class ProfileService
             $work->user_id = Auth::user()->id;
             $work->save();
 
+            Post::create([
+                'content'=>'New WorkExperiance added',
+                'posting_date'=>Carbon::now(),
+                'user_id'=>Auth::user()->id,
+            ]);
             if(!$work)
             {
                 throw new \Exception('work experiance not inserted correctly');
             }
+
              return response()->json([
                 'code' => 200,
                 'status' => true,
@@ -203,24 +274,27 @@ class ProfileService
         }
     }
 
-    public function editExperianceDetails($id,$request)
+    public function editExperianceDetails($request)
     {
          try{
 
-            $experiance = WorkExperiance::find($id);
-
-            $experiance->title = $request['title'];
-            $experiance->company = $request['company'];
-            $experiance->currently_working = $request['currently_working'];
-            $experiance->location = $request['location'];
-            $experiance->selectEmpType = $request['selectEmpType'];
-            $experiance->locationType = $request['locationType'];
-            $experiance->update();
-            
-            if($experiance->currently_working == 1)
-            {
-                
+            if($request['currently_working']){
+                    $work = WorkExperiance::where('currently_working',1)->update(['currently_working'=>0]);
             }
+            $experiance = WorkExperiance::where('id',$request['id'])->where('user_id',Auth::user()->id)->update([
+                'title'=>$request['title'],
+                'company'=>$request['company'],
+                'currently_working'=>$request['currently_working'],
+                'location'=>$request['location'],
+                'selectEmpType'=>$request['selectEmpType'],
+                'locationtype'=>$request['locationType']
+            ]);
+
+            Post::create([
+                'content'=>'Work Experiance updated',
+                'posting_date'=>Carbon::now(),
+                'user_id'=>Auth::user()->id,
+            ]);
 
             if(!$experiance)
             {
@@ -355,6 +429,145 @@ class ProfileService
 
         }catch(\Exception $e){
             log::error('ProfileService @deleteEducation: '.$e->getMessage());
+            return response()->json([
+                'code' => 500,
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function editEducation($request)
+    {
+        try{
+
+            $education = Education::where('user_id',Auth::user()->id)->where('id',$request['id'])->update([
+                'school'=>$request['school'],
+                'degree'=>$request['degree'],
+                'field_of_study'=>$request['field_of_study']
+            ]);
+
+            return response()->json([
+                'code' => 200,
+                'status' => true,
+                'data'=>'successfully delete the education details',
+            ], 200);
+
+        }catch(\Exception $e){
+            log::error('ProfileService @deleteEducation: '.$e->getMessage());
+            return response()->json([
+                'code' => 500,
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function addSkill($request)
+    {
+         try{
+            $education = new Skill();
+            $education->skill = $request['skill'];
+            $education->user_id = Auth::user()->id;
+            $education->save();
+
+            return response()->json([
+                'code' => 200,
+                'status' => true,
+                'data'=>'successfully Add the skill details',
+            ], 200);
+
+        }catch(\Exception $e){
+            log::error('ProfileService @addSkill: '.$e->getMessage());
+            return response()->json([
+                'code' => 500,
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getSkills()
+    {
+         try{
+            $education = Skill::where('user_id',Auth::user()->id)->get();
+
+            return response()->json([
+                'code' => 200,
+                'status' => true,
+                'data'=>$education,
+            ], 200);
+
+        }catch(\Exception $e){
+            log::error('ProfileService @getSkills: '.$e->getMessage());
+            return response()->json([
+                'code' => 500,
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function deleteSkill($id)
+    {
+         try{
+            $education = Skill::where('id',$id)->where('user_id',Auth::user()->id);
+            $education->delete();
+
+            return response()->json([
+                'code' => 200,
+                'status' => true,
+                'data'=>'successfully deleted the skill',
+            ], 200);
+
+        }catch(\Exception $e){
+            log::error('ProfileService @deleteSkill: '.$e->getMessage());
+            return response()->json([
+                'code' => 500,
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function uploadProfileImage($request)
+    {
+         try{
+            $education = Profile::where('user_id',Auth::user()->id)->update([
+                'profile_image'=>$request['image']
+            ]);
+
+            return response()->json([
+                'code' => 200,
+                'status' => true,
+                'data'=>'successfully upload the image',
+            ], 200);
+
+        }catch(\Exception $e){
+            log::error('ProfileService @uploadProfileImage: '.$e->getMessage());
+            return response()->json([
+                'code' => 500,
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function uploadCoverImage($request)
+    {
+        try{
+            $education = Profile::where('user_id',Auth::user()->id)->update([
+                'cover_image'=>$request['image']
+            ]);
+
+            return response()->json([
+                'code' => 200,
+                'status' => true,
+                'data'=>'successfully upload the image',
+            ], 200);
+
+        }catch(\Exception $e){
+            log::error('ProfileService @uploadCoverImage: '.$e->getMessage());
             return response()->json([
                 'code' => 500,
                 'status' => false,
