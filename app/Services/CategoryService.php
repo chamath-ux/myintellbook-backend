@@ -2,7 +2,7 @@
 
 namespace App\Services;
 use App\Models\Category;
-use App\Models\Profession;
+use App\Models\profession;
 
 
 class CategoryService{
@@ -28,7 +28,7 @@ class CategoryService{
 
     public function getProfessions($category_id){
         try{
-            $professions = Profession::where('category_id', $category_id)->get();
+            $professions = profession::where('category_id', $category_id)->get();
             return response()->json([
                 'code' => 200,
                 'status' => true,
