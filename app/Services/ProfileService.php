@@ -536,6 +536,12 @@ class ProfileService
             $education = Profile::where('user_id',Auth::user()->id)->update([
                 'profile_image'=>$request['image']
             ]);
+             Post::create([
+                'content'=>'Profile Image changed',
+                'post_image'=>$request['image'],
+                'posting_date'=>Carbon::now(),
+                'user_id'=>Auth::user()->id,
+            ]);
 
             return response()->json([
                 'code' => 200,
@@ -558,6 +564,12 @@ class ProfileService
         try{
             $education = Profile::where('user_id',Auth::user()->id)->update([
                 'cover_image'=>$request['image']
+            ]);
+            Post::create([
+                'content'=>'Cover Image changed',
+                'post_image'=>$request['image'],
+                'posting_date'=>Carbon::now(),
+                'user_id'=>Auth::user()->id,
             ]);
 
             return response()->json([
