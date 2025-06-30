@@ -80,7 +80,7 @@ class User extends Authenticatable
      */
     public function sendVerificationEmail()
     {
-        $verificationUrl = url(config('app.verification_link')."?email=".$this->email."&token=". $this->email_verification_token);
+        $verificationUrl = config('app.verification_link')."?email=".$this->email."&token=". $this->email_verification_token;
         Mail::to($this->email)->send(new confirmMail($verificationUrl));
     }
 
