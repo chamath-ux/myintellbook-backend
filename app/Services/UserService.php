@@ -103,7 +103,7 @@ class UserService{
             // $existingToken->forceDelete();
 
             if($existingToken) {
-                throw new \Exception('already sent password reset link');
+                $existingToken->forceDelete();
             }
             $resetLink = PasswordResetToken::create([
                 'email' => $link['email'],
