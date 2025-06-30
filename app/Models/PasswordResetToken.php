@@ -27,7 +27,7 @@ class PasswordResetToken extends Model
 
     public function sendPasswordResetEmail($email,$token)
     {
-        $verificationUrl = config('app.password_reset_link').":". $token;
+        $verificationUrl = "ll:". $token;
         Mail::to($email)->send(new passwordReset($verificationUrl));
     }
 }
