@@ -22,11 +22,12 @@ class PasswordResetToken extends Model
         'email',
         'token',
         'created_at',
+        'deleted_at'
     ];
 
     public function sendPasswordResetEmail($email,$token)
     {
-        $verificationUrl = url(config('app.password_reset_link').":". $token);
+        $verificationUrl = config('app.password_reset_link').":". $token;
         Mail::to($email)->send(new passwordReset($verificationUrl));
     }
 }
