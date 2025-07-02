@@ -279,7 +279,7 @@ class ProfileService
          try{
 
             if($request['currently_working']){
-                    $work = WorkExperiance::where('currently_working',1)->update(['currently_working'=>0]);
+                    $work = WorkExperiance::where('currently_working',1)->where('user_id',Auth::user()->id)->update(['currently_working'=>0]);
             }
             $experiance = WorkExperiance::where('id',$request['id'])->where('user_id',Auth::user()->id)->update([
                 'title'=>$request['title'],
@@ -327,6 +327,11 @@ class ProfileService
             {
                 throw new \Exception('work experiance delete correctly');
             }
+            Post::create([
+                'content'=>'WorkExperiance deleted',
+                'posting_date'=>Carbon::now(),
+                'user_id'=>Auth::user()->id,
+            ]);
              return response()->json([
                 'code' => 200,
                 'status' => true,
@@ -353,6 +358,12 @@ class ProfileService
             $education->field_of_study = $request['field_of_study'];
             $education->user_id = Auth::user()->id;
             $education->save();
+
+            Post::create([
+                'content'=>'education details added',
+                'posting_date'=>Carbon::now(),
+                'user_id'=>Auth::user()->id,
+            ]);
 
             return response()->json([
                 'code' => 200,
@@ -421,6 +432,12 @@ class ProfileService
             $education = Education::where('user_id',Auth::user()->id)->where('id',$id);
             $education->delete();
 
+             Post::create([
+                'content'=>'education details deleted',
+                'posting_date'=>Carbon::now(),
+                'user_id'=>Auth::user()->id,
+            ]);
+
             return response()->json([
                 'code' => 200,
                 'status' => true,
@@ -447,6 +464,12 @@ class ProfileService
                 'field_of_study'=>$request['field_of_study']
             ]);
 
+             Post::create([
+                'content'=>'education details updated',
+                'posting_date'=>Carbon::now(),
+                'user_id'=>Auth::user()->id,
+            ]);
+
             return response()->json([
                 'code' => 200,
                 'status' => true,
@@ -470,6 +493,12 @@ class ProfileService
             $education->skill = $request['skill'];
             $education->user_id = Auth::user()->id;
             $education->save();
+
+             Post::create([
+                'content'=>'skill details added',
+                'posting_date'=>Carbon::now(),
+                'user_id'=>Auth::user()->id,
+            ]);
 
             return response()->json([
                 'code' => 200,
@@ -513,6 +542,12 @@ class ProfileService
          try{
             $education = Skill::where('id',$id)->where('user_id',Auth::user()->id);
             $education->delete();
+
+            Post::create([
+                'content'=>'skill details deleted',
+                'posting_date'=>Carbon::now(),
+                'user_id'=>Auth::user()->id,
+            ]);
 
             return response()->json([
                 'code' => 200,
@@ -580,6 +615,49 @@ class ProfileService
 
         }catch(\Exception $e){
             log::error('ProfileService @uploadCoverImage: '.$e->getMessage());
+            return response()->json([
+                'code' => 500,
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function profileList()
+    {
+        try{
+
+            $profileDetails = User::with(['workExperiances' => function ($query) {
+                    $query->where('currently_working', 1);
+            }])->whereNot('id',Auth::user()->id)->get();
+
+        $Details = $profileDetails->map(function($detail){
+                return [
+                    'first_name'=>$detail->profile['first_name'],
+                    'last_name'=>$detail->profile['last_name'],
+                    'profile_image'=>$detail->profile['profile_image'],
+                    'currently_working'=> $detail->workExperiances->map(function($experiance){
+                        return[
+                            'company'=>$experiance['company'],
+                            'location'=>$experiance['location']
+                        ];
+                    }),
+                ];
+        });
+
+            if(!$profileDetails)
+            {
+                throw new \Exception('Profiles not found');
+            }
+
+            return response()->json([
+                'code' => 200,
+                'status' => true,
+                'data' => $Details,
+            ], 200);
+
+        }catch(\Exception $e){
+            log::error('ProfileService @getProfilesList: '.$e->getMessage());
             return response()->json([
                 'code' => 500,
                 'status' => false,

@@ -38,4 +38,5 @@ Route::middleware('auth.token')->group(function () {
     Route::post('/upload-cover-image',[\App\Http\Controllers\ProfileController::class,'uploadCoverImage']);
     Route::get('/profile-completed-status',[\App\Http\Controllers\ProfileController::class,'checkProfileCompleted']);
     Route::get('/get-user-summary',[\App\Http\Controllers\ProfileController::class,'basicInfo']);
+    Route::get('/profile-list',[\App\Http\Controllers\ProfileController::class,'profileList']);
 });

@@ -140,4 +140,10 @@ class ProfileController extends Controller
         $user = $this->profileService->basicInfo();
         return $user;
     }
+
+    public function profileList()
+    {
+        $user = $this->profileService->profileList();
+        return $user;
+    }
 }
