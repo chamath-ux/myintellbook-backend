@@ -24,16 +24,16 @@ class ProfileService
         $attributes = [
             'generalInfo'=>
             [
-                'first_name' =>true,
-                'last_name'=>false,
-                'gender'=>false,
-                'birth_date'=>false,
+                'first_name' =>!empty(Auth::user()->profile['first_name']),
+                'last_name'=>!empty(Auth::user()->profile['last_name']),
+                'gender'=>!empty(Auth::user()->profile['gender']),
+                'birth_date'=>!empty(Auth::user()->profile['birth_date']),
             ],
-            'coverImage'=>true,
-            'profileImage'=>false,
-            'workExperiance' => false,
-            'education'=> false,
-            'skills'=>false
+            'coverImage'=>Auth::user()->profile['cover_image'] != NULL,
+            'profileImage'=>Auth::user()->profile['profile_image'] != NULL,
+            'workExperiance' => WorkExperiance::where('user_id',Auth::user()->id)->exists(),
+            'education'=> Education::where('user_id',Auth::user()->id)->exists(),
+            'skills'=> Skill::where('user_id',Auth::user()->id)->exists(),
         ];
         return response()->json([
                 'code' => 200,
