@@ -100,6 +100,26 @@ class User extends Authenticatable
 
     public function posts()
     {
-        return $this->hasMany(Post::class);
+        return $this->hasMany(Post::class)->where('is_approved', true);
+    }
+
+    public function question()
+    {
+        return $this->hasOne(Question::class);
+    }
+
+    public function questionsSeen()
+    {
+        return $this->belongsToMany(Question::class, 'question_user')->withTimestamps();
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function scores()
+    {
+        return $this->hasMany(Score::class);
     }
 }

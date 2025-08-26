@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Models\Score;
 
 class WorkExperiance extends Model
 {
@@ -13,6 +14,11 @@ class WorkExperiance extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+     public function scores()
+    {
+        return $this->morphMany(Score::class, 'activity');
     }
     
 }

@@ -16,6 +16,7 @@ return [
     'name' => env('APP_NAME', 'MyIntellBook'),
     'verification_link' => env('EMAIL_VERIFICATION_URL',''),
     'password_reset_link' => env('PASSWORD_RESET_URL',''),
+    
 
     /*
     |--------------------------------------------------------------------------

@@ -39,4 +39,13 @@ Route::middleware('auth.token')->group(function () {
     Route::get('/profile-completed-status',[\App\Http\Controllers\ProfileController::class,'checkProfileCompleted']);
     Route::get('/get-user-summary',[\App\Http\Controllers\ProfileController::class,'basicInfo']);
     Route::get('/profile-list',[\App\Http\Controllers\ProfileController::class,'profileList']);
+    Route::get('/request-today-question', [\App\Http\Controllers\QuestionController::class, 'getTodaySpecialQuestions']);
+    Route::post('/generate-questions', [\App\Http\Controllers\QuestionController::class, 'generateQuestions']);
+    Route::post('/set-user-answer', [\App\Http\Controllers\QuestionController::class, 'setUserAnswer']);
+    Route::post('/set-comment', [\App\Http\Controllers\CommentController::class, 'setComment']);
+    Route::get('/get-scores',[\App\Http\Controllers\ScoreController::class, 'getScores']);
+    Route::get('/get-comments', [\App\Http\Controllers\CommentController::class, 'getComments']);
+    Route::get('/notifications',[\App\Http\Controllers\NotificationsController::class,'getNotifications']);
+    Route::get('/allNotifications',[\App\Http\Controllers\NotificationsController::class,'getAll']);
+    Route::get('/topScores',[\App\Http\Controllers\ScoreController::class, 'topScores']);
 });
