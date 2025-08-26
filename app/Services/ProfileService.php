@@ -46,23 +46,39 @@ class ProfileService
     public function basicInfo()
     {
 
+        $today = Carbon::today()->toDateString();
         $profileDetails = User::with(['workExperiances' => function ($query) {
                 $query->where('currently_working', 1);
+        }])->with(['question'=>function($query)use ($today) {
+            $query->where('user_id',Auth::user()->id)->whereDate('issue_date',$today);
         }])->where('id',Auth::user()->id)->get();
 
         $Details = $profileDetails->map(function($detail){
+
+              $options = $detail->question->options ? json_decode($detail->question->options, true) : [];
+
+            $format_question = [
+                'id' => $detail->question->id,
+                'category' => $detail->question->category,
+                'question' => $detail->question->question,
+                'options' => $options,
+                'answer' => $detail->question->answer,
+                'is_used' => $detail->question->is_used,
+                'difficulty_level' => $detail->question->difficulty_level,
+            ];
                 return [
                     'first_name'=>$detail->profile['first_name'],
                     'last_name'=>$detail->profile['last_name'],
-                    'profile_image'=>$detail->profile['profile_image'],
-                    'cover_image'=>$detail->profile['cover_image'],
+                    'profile_image'=>($detail->profile['profile_image']) ? $detail->profile['profile_image'] : '',
+                    'cover_image'=>($detail->profile['cover_image']) ? $detail->profile['cover_image'] : '',
                     'currently_working'=> $detail->workExperiances->map(function($experiance){
                         return[
                             'company'=>$experiance['company'],
                             'location'=>$experiance['location']
                         ];
                     }),
-                    'posts'=>$this->postService->postDetails($detail->posts)
+                    'posts'=>$this->postService->postDetails($detail->posts),
+                    'tquestion' => $format_question,
                 ];
         });
         return response()->json([
