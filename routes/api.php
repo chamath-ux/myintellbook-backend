@@ -45,4 +45,7 @@ Route::middleware('auth.token')->group(function () {
     Route::post('/set-comment', [\App\Http\Controllers\CommentController::class, 'setComment']);
     Route::get('/get-scores',[\App\Http\Controllers\ScoreController::class, 'getScores']);
     Route::get('/get-comments', [\App\Http\Controllers\CommentController::class, 'getComments']);
+    Route::get('/notifications',[\App\Http\Controllers\NotificationsController::class,'getNotifications']);
+    Route::get('/allNotifications',[\App\Http\Controllers\NotificationsController::class,'getAll']);
+    Route::get('/topScores',[\App\Http\Controllers\ScoreController::class, 'topScores']);
 });

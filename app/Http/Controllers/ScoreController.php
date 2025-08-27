@@ -7,9 +7,19 @@ use App\Models\Score;
 use App\Models\Post;
 use App\Models\Question;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use App\Notifications\NewUserNotification;
+
 
 class ScoreController extends Controller
 {
+    private $scoreService;
+
+    public function __construct()
+    {
+        $this->scoreService = new \App\Services\ScoreService();
+    }
+
     public function getScores(Request $request)
     {
         // Logic to retrieve scores for the authenticated user
@@ -63,5 +73,40 @@ class ScoreController extends Controller
         ];
 
         return response()->json(['data'=>$formatedScores,'code'=>200]);
+    }
+
+    public function topScores(){
+
+        $scores = Score::with('user')->select('user_id', DB::raw('SUM(points) as total_points'))
+                    ->whereHas('user.profile', function ($q) {
+                        $q->whereNotNull('first_name');
+                        })
+                    ->groupBy('user_id')
+                    ->orderBy('total_points', 'desc')
+                    ->limit(6)
+                    ->get();
+
+                     $index = collect($scores)->search(function ($score) {
+                        return $score['user_id'] === auth()->user()->id;
+                    });
+
+                    $rank =($index +1);
+                    $message = "Your in Top 3 ranks ,Your rank is $rank!";
+                    if($this->scoreService->notification_exsists($scores ,$message, $index))
+                    {
+                        
+                        auth()->user()->notify(new NewUserNotification($message));
+                    }
+                    
+                    $top_users=$scores->map(function($score){
+
+                        return[
+                            'name'=>($score['user']['profile']) ? $score['user']['profile']->first_name . ' ' .$score['user']['profile']->last_name : '',
+                            'profile_image'=>($score['user']['profile']) ? $score['user']['profile']->profile_image: '',
+                            'score'=>$score->total_points
+                        ];
+                    });
+
+        return response()->json(['data'=>$top_users,'code'=>200]);
     }
 }

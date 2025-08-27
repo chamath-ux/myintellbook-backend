@@ -10,6 +10,7 @@ use App\Models\Answer;
 use App\Models\Post;
 use Carbon\Carbon;
 use App\Http\Requests\AnswerRequest;
+use App\Notifications\NewUserNotification;
 
 class QuestionController extends Controller
 {
@@ -30,28 +31,7 @@ class QuestionController extends Controller
             'answer' => $request->answer,
             'answer_status' => ($question->answer == $request->answer) ? 'correct' : 'incorrect',
         ]);
-
-        // $answer = "Correct Answer is: ".$question->answer;
-
-        // $format_question = [
-        //     'id' => $question->id,
-        //     'question' => $question->question,
-        //     'answer' => $answer,
-        //     'options' => $question->options,
-        // ];
-
-        // $content = json_encode($format_question);
-        // $post = Post::create([
-        //     'user_id' => $user->id,
-        //     'content' => $content,
-        //     'posting_date'=>Carbon::now(),
-        // ]);
-
-
-        // $decode_options = json_decode($question->options, true);
-        // $decode_question = json_decode($question->question, true);
-        // $decode_post = json_decode($post, true);
-
+        auth()->user()->notify(new NewUserNotification("You have answer the today question! answer will be publish tommorrow"));
 
         return response()->json(['message' => 'Answer will publish tommorrow'], 200);
     }

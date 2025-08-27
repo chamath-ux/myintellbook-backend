@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Education;
 use App\Models\Score;
+use App\Notifications\NewUserNotification;
 
 class EducationObserver
 {
@@ -19,6 +20,7 @@ class EducationObserver
                 'base_type'=>1,
                 'points' => 1, // Initialize with a default score
             ]);
+            auth()->user()->notify(new NewUserNotification("You have added a Education detail! You have gain a 1 point"));
     }
 
     /**
@@ -34,7 +36,7 @@ class EducationObserver
      */
     public function deleted(Education $education): void
     {
-        //
+         auth()->user()->notify(new NewUserNotification("You have Deleted a Education detail!"));
     }
 
     /**

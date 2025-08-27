@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\WorkExperiance;
 use App\Models\Score;
+use App\Notifications\NewUserNotification;
 
 class ExperianceObserver
 {
@@ -19,6 +20,8 @@ class ExperianceObserver
                 'base_type'=>1,
                 'points' => 1, // Initialize with a default score
             ]);
+
+            auth()->user()->notify(new NewUserNotification("Your Experiance added! You got 1 point for adding a experiance"));
        
     }
 
@@ -27,7 +30,7 @@ class ExperianceObserver
      */
     public function updated(WorkExperiance $workExperiance): void
     {
-        //
+        auth()->user()->notify(new NewUserNotification("Your Experiance Updated!"));
     }
 
     /**
@@ -35,7 +38,7 @@ class ExperianceObserver
      */
     public function deleted(WorkExperiance $workExperiance): void
     {
-        //
+       auth()->user()->notify(new NewUserNotification("Your Experiance Deleted!"));
     }
 
     /**

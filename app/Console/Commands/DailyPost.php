@@ -9,6 +9,7 @@ use App\Models\Answer;
 use Illuminate\Support\Facades\Log;
 use App\Models\Post;
 use App\Models\Score;
+use App\Notifications\NewUserNotification;
 class DailyPost extends Command
 {
     /**
@@ -58,8 +59,11 @@ class DailyPost extends Command
                         'date' => Carbon::now(),
                     ]);
                      $this->updatePost($getYesterDayQuestion, $user, ($answer) ? $answer : 'No answer',$yesterday);
+                     $user->notify(new NewUserNotification("You havent answer the question ! No points add to your score"));
                     continue;
                 }
+
+                    App/
 
                   Score::create([
                         'user_id' => $user->id,
@@ -69,6 +73,7 @@ class DailyPost extends Command
                         'date' => Carbon::now(),
                     ]);
 
+                        
                        $this->updatePost($getYesterDayQuestion, $user, ($answer)? $answer->status : 'No answer',$yesterday);
             }
 
@@ -98,5 +103,7 @@ class DailyPost extends Command
                     'is_approved' => true,
                     
                 ]);
+                $marks = ($answer== 'correct') ? 5 : 0;
+                        $user->notify(new NewUserNotification("You have did the daily question $yesterday ! you have gain $marks points"));
     }
 }

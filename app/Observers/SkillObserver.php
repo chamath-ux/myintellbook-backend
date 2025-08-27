@@ -19,6 +19,7 @@ class SkillObserver
                 'base_type'=>1,
                 'points' => 1, // Initialize with a default score
             ]);
+             auth()->user()->notify(new NewUserNotification("You have added a Skill! You have gain a 1 point"));
     }
 
     /**
@@ -34,7 +35,7 @@ class SkillObserver
      */
     public function deleted(Skill $skill): void
     {
-        //
+        auth()->user()->notify(new NewUserNotification("You have Deleted a Skill!"));
     }
 
     /**

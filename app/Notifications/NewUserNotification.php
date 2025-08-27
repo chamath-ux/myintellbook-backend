@@ -70,4 +70,9 @@ class NewUserNotification extends Notification
             //
         ];
     }
+
+     public function id()
+    {
+        return md5('user_'.$this->notifiable->id.'_msg_'.$this->message);
+    }
 }

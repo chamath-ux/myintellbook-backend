@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use Carbon\Carbon;
+use App\Notifications\NewUserNotification;
 
 class ProfileService
 {
@@ -593,12 +594,13 @@ class ProfileService
                 'posting_date'=>Carbon::now(),
                 'user_id'=>Auth::user()->id,
             ]);
-
+            auth()->user()->notify(new NewUserNotification("Your Profile Picture Change!"));
             return response()->json([
                 'code' => 200,
                 'status' => true,
                 'data'=>'successfully upload the image',
             ], 200);
+            
 
         }catch(\Exception $e){
             log::error('ProfileService @uploadProfileImage: '.$e->getMessage());
@@ -622,12 +624,13 @@ class ProfileService
                 'posting_date'=>Carbon::now(),
                 'user_id'=>Auth::user()->id,
             ]);
-
+            auth()->user()->notify(new NewUserNotification("Your Cover Picture Change!"));
             return response()->json([
                 'code' => 200,
                 'status' => true,
                 'data'=>'successfully upload the image',
             ], 200);
+            
 
         }catch(\Exception $e){
             log::error('ProfileService @uploadCoverImage: '.$e->getMessage());
