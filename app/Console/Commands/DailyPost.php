@@ -44,37 +44,25 @@ class DailyPost extends Command
 
 
             if($getYesterDayQuestion){
+                $scores = new  \App\Services\ScoreService();
+                $date = Carbon::now();
+
                 $answer = Answer::where('user_id', $user->id)
                 ->latest('id')
                 ->first();
 
                 if (!$answer) {
                     $this->error('No answer found for user ID: ' . $user->id);
-                    
-                    Score::create([
-                        'user_id' => $user->id,
-                        'activity_id' => $getYesterDayQuestion->id,
-                        'activity_type' => Question::class,
-                        'points' => 0,
-                        'date' => Carbon::now(),
-                    ]);
-                     $this->updatePost($getYesterDayQuestion, $user, ($answer) ? $answer : 'No answer',$yesterday);
-                     $user->notify(new NewUserNotification("You havent answer the question ! No points add to your score"));
+
+                    $scores->addScore($user,$getYesterDayQuestion,Question::class,0,$date);
+                    $this->updatePost($getYesterDayQuestion, $user, ($answer) ? $answer : 'No answer',$yesterday);
+                    $user->notify(new NewUserNotification("You havent answer the question ! No points add to your score"));
                     continue;
                 }
 
-                    App/
-
-                  Score::create([
-                        'user_id' => $user->id,
-                        'activity_id' => $getYesterDayQuestion->id,
-                        'activity_type' => Question::class,
-                        'points' => ($answer->answer_status == 'correct') ? 5 : 0,
-                        'date' => Carbon::now(),
-                    ]);
-
-                        
-                       $this->updatePost($getYesterDayQuestion, $user, ($answer)? $answer->status : 'No answer',$yesterday);
+                    $points = ($answer->answer_status == 'correct') ? 5 : 0;
+                    $scores->addScore($user,$getYesterDayQuestion,Question::class,$points,$date);  
+                    $this->updatePost($getYesterDayQuestion, $user, ($answer)? $answer->status : 'No answer',$yesterday);
             }
 
             

@@ -77,35 +77,16 @@ class ScoreController extends Controller
 
     public function topScores(){
 
-        $scores = Score::with('user')->select('user_id', DB::raw('SUM(points) as total_points'))
-                    ->whereHas('user.profile', function ($q) {
-                        $q->whereNotNull('first_name');
-                        })
-                    ->groupBy('user_id')
-                    ->orderBy('total_points', 'desc')
-                    ->limit(6)
-                    ->get();
+        
+    $scores = $this->scoreService->getTopScores();            
+    $top_users=$scores->map(function($score){
 
-                     $index = collect($scores)->search(function ($score) {
-                        return $score['user_id'] === auth()->user()->id;
-                    });
-
-                    $rank =($index +1);
-                    $message = "Your in Top 3 ranks ,Your rank is $rank!";
-                    if($this->scoreService->notification_exsists($scores ,$message, $index))
-                    {
-                        
-                        auth()->user()->notify(new NewUserNotification($message));
-                    }
-                    
-                    $top_users=$scores->map(function($score){
-
-                        return[
-                            'name'=>($score['user']['profile']) ? $score['user']['profile']->first_name . ' ' .$score['user']['profile']->last_name : '',
-                            'profile_image'=>($score['user']['profile']) ? $score['user']['profile']->profile_image: '',
-                            'score'=>$score->total_points
-                        ];
-                    });
+        return[
+            'name'=>($score['user']['profile']) ? $score['user']['profile']->first_name . ' ' .$score['user']['profile']->last_name : '',
+            'profile_image'=>($score['user']['profile']) ? $score['user']['profile']->profile_image: '',
+            'score'=>$score->total_points
+        ];
+    });
 
         return response()->json(['data'=>$top_users,'code'=>200]);
     }

@@ -4,6 +4,8 @@ namespace App\Observers;
 
 use App\Models\Skill;
 use App\Models\Score;
+use Carbon\Carbon;
+use App\Notifications\NewUserNotification;
 
 class SkillObserver
 {
@@ -12,14 +14,10 @@ class SkillObserver
      */
     public function created(Skill $skill): void
     {
-            Score::create([
-                'user_id' => auth()->id(), // Assuming the user is authenticated
-                'activity_id' => $skill->id,
-                'activity_type' => get_class($skill),
-                'base_type'=>1,
-                'points' => 1, // Initialize with a default score
-            ]);
-             auth()->user()->notify(new NewUserNotification("You have added a Skill! You have gain a 1 point"));
+        $scores = new  \App\Services\ScoreService();
+        $date = Carbon::now();
+        $scores->addScore(auth()->user(),$skill,get_class($skill),1,1,$date);
+        auth()->user()->notify(new NewUserNotification("You have added a Skill! You have gain a 1 point"));
     }
 
     /**

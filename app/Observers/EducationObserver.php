@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\Education;
 use App\Models\Score;
 use App\Notifications\NewUserNotification;
+use Carbon\Carbon;
 
 class EducationObserver
 {
@@ -13,14 +14,10 @@ class EducationObserver
      */
     public function created(Education $education): void
     {
-       Score::create([
-                'user_id' => auth()->id(), // Assuming the user is authenticated
-                'activity_id' => $education->id,
-                'activity_type' => get_class($education),
-                'base_type'=>1,
-                'points' => 1, // Initialize with a default score
-            ]);
-            auth()->user()->notify(new NewUserNotification("You have added a Education detail! You have gain a 1 point"));
+        $scores = new  \App\Services\ScoreService();
+        $date = Carbon::now();
+        $scores->addScore(auth()->user(),$education,get_class($education),1,1,$date);
+        auth()->user()->notify(new NewUserNotification("You have added a Education detail! You have gain a 1 point"));
     }
 
     /**
