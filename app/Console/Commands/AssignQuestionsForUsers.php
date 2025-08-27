@@ -46,7 +46,7 @@ class AssignQuestionsForUsers extends Command
                 $isQuestionAssigned = Question::where('user_id',$user->id)
                                             ->whereDate('issue_date',$today)
                                             ->first();
-                $user->questionsSeen()->attach($unusedQuestions->id);
+                $user->questionsSeen()->attach($isQuestionAssigned->id);
                 $this->createDailyQUestionPost($isQuestionAssigned, $user);
 
                 continue;
