@@ -648,13 +648,18 @@ class ProfileService
 
             $profileDetails = User::with(['workExperiances' => function ($query) {
                     $query->where('currently_working', 1);
-            }])->whereNot('id',Auth::user()->id)->get();
+            }])->with('profile', function ($q) {
+                        $q->whereNotNull('first_name');
+                        $q->whereNotNUll('last_name');
+            })->whereNot('id',Auth::user()->id)->get();
+
 
         $Details = $profileDetails->map(function($detail){
+
                 return [
-                    'first_name'=>$detail->profile['first_name'],
-                    'last_name'=>$detail->profile['last_name'],
-                    'profile_image'=>$detail->profile['profile_image'],
+                    'first_name'=>($detail->profile)? $detail->profile['first_name'] : '',
+                    'last_name'=>($detail->profile) ? $detail->profile['last_name'] :'',
+                    'profile_image'=>($detail->profile) ? $detail->profile['profile_image'] :null,
                     'currently_working'=> $detail->workExperiances->map(function($experiance){
                         return[
                             'company'=>$experiance['company'],
