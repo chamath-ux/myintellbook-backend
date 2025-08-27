@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\WorkExperiance;
 use App\Models\Score;
 use App\Notifications\NewUserNotification;
+use Carbon\Carbon;
 
 class ExperianceObserver
 {
@@ -13,15 +14,10 @@ class ExperianceObserver
      */
     public function created(WorkExperiance $workExperiance): void
     {
-            Score::create([
-                'user_id' => auth()->id(), // Assuming the user is authenticated
-                'activity_id' => $workExperiance->id,
-                'activity_type' => get_class($workExperiance),
-                'base_type'=>1,
-                'points' => 1, // Initialize with a default score
-            ]);
-
-            auth()->user()->notify(new NewUserNotification("Your Experiance added! You got 1 point for adding a experiance"));
+        $scores = new  \App\Services\ScoreService();
+        $date = Carbon::now();
+        $scores->addScore(auth()->user(),$workExperiance,get_class($workExperiance),1,1,$date);
+        auth()->user()->notify(new NewUserNotification("Your Experiance added! You got 1 point for adding a experiance"));
        
     }
 
