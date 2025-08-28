@@ -55,7 +55,7 @@ class DailyPost extends Command
                 if (!$answer) {
                     $this->error('No answer found for user ID: ' . $user->id);
 
-                    $scores->addScore($user,$getYesterDayQuestion,Question::class,0,$date);
+                    $scores->addScore($user,$getYesterDayQuestion,Question::class,0,$base_type,$date);
                     $this->updatePost($getYesterDayQuestion, $user, ($answer) ? $answer : 'No answer',$yesterday);
                     $user->notify(new NewUserNotification("You havent answer the question ! No points add to your score"));
                     continue;
