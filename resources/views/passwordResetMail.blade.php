@@ -32,14 +32,14 @@
         .content {
             font-size: 16px;
             line-height: 1.6;
-            color: #333333;
+            /* color: #333333; */
         }
         .button {
             display: inline-block;
             padding: 10px 20px;
             margin: 20px 0;
-            color: #ffffff;
-            background-color: #1a82e2;
+            color: white !important;
+            background-color:rgb(160, 56, 41);
             text-decoration: none;
             border-radius: 4px;
         }
@@ -55,10 +55,11 @@
     <div class="container">
         <div class="header">
             <a href="{{ config('app.url') }}" target="_blank">
-                <img src="{{ asset('logo.png') }}" alt="Logo">
+                
             </a>
         </div>
         <div class="content">
+            <img src="{{ asset('webIcon.jpeg') }}" alt="Logo" style="width:150px;">
             <h1>Reset Your Password</h1>
             <p>Hi,</p>
             <p>Please click the button below to reset your password.</p>

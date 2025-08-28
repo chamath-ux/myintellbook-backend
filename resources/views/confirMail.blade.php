@@ -38,8 +38,8 @@
             display: inline-block;
             padding: 10px 20px;
             margin: 20px 0;
-            color: #ffffff;
-            background-color: #1a82e2;
+            color: white !important;
+            background-color:rgb(160, 56, 41);
             text-decoration: none;
             border-radius: 4px;
         }
