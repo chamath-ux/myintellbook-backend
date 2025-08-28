@@ -46,6 +46,7 @@ class DailyPost extends Command
             if($getYesterDayQuestion){
                 $scores = new  \App\Services\ScoreService();
                 $date = Carbon::now();
+                $base_type = 0;
 
                 $answer = Answer::where('user_id', $user->id)
                 ->latest('id')
@@ -61,7 +62,8 @@ class DailyPost extends Command
                 }
 
                     $points = ($answer->answer_status == 'correct') ? 5 : 0;
-                    $scores->addScore($user,$getYesterDayQuestion,Question::class,$points,$date);  
+                    
+                    $scores->addScore($user,$getYesterDayQuestion,Question::class,$base_type,$points,$date);  
                     $this->updatePost($getYesterDayQuestion, $user, ($answer)? $answer->status : 'No answer',$yesterday);
             }
 
