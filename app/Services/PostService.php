@@ -27,10 +27,11 @@ class PostService{
     private function formatPostContent($post)
     {
         $content =$post->content;
+
         return [
             'id' => $content['id'],
             'question' => $content['question'],
-            'options' => json_decode($content['options']),
+            'options' => $content['options'],
             'level' => $content['difficulty_level'] ?? 'unknown',
             'answer' => $content['answer'],
             'points' => $content['points'] ?? 0,
