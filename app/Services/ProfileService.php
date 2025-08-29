@@ -66,6 +66,7 @@ class ProfileService
                 'answer' => $detail->question->answer,
                 'is_used' => $detail->question->is_used,
                 'difficulty_level' => $detail->question->difficulty_level,
+                'post_at'=> Carbon::parse($detail->question->issue_date)->diffForHumans()
             ];
                 return [
                     'first_name'=>$detail->profile['first_name'],
