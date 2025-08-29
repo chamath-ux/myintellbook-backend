@@ -56,7 +56,7 @@ class ProfileService
 
         $Details = $profileDetails->map(function($detail){
 
-              $options = $detail->question->options ? json_decode($detail->question->options, true) : [];
+              $options = $detail->question->options;
 
             $format_question = [
                 'id' => $detail->question->id,
@@ -75,7 +75,8 @@ class ProfileService
                     'currently_working'=> $detail->workExperiances->map(function($experiance){
                         return[
                             'company'=>$experiance['company'],
-                            'location'=>$experiance['location']
+                            'location'=>$experiance['location'],
+                            'profession'=>$experiance['title'],
                         ];
                     }),
                     'posts'=>$this->postService->postDetails($detail->posts),
@@ -172,7 +173,26 @@ class ProfileService
     public function getGeneralInfo()
     {
         try{
-            $info = Profile::where('user_id',Auth::user()->id)->get();
+            $info = Profile::where('user_id',Auth::user()->id)->whereHas('user.workexperiances', function ($q) {
+                        $q->where('currently_working',1);
+                        })->first();
+
+            $formate_info = [
+                "id"=> $info->id,
+                "user_id"=> $info->user_id,
+                "first_name"=> $info->first_name,
+                "last_name"=> $info->last_name,
+                "gender"=> $info->gender,
+                "profession_id"=> $info->profession_id,
+                "birth_date"=> $info->birth_date,
+                "profile_image"=> $info->profile_image,
+                "cover_image"=> $info->cover_image,
+                'profession'=>[
+                    "company"=> $info->user->workExperiances->first()->company,
+                    "location"=> $info->user->workExperiances->first()->location,
+                    "profession"=>$info->user->workExperiances->first()->title
+                ]
+            ];
 
             if(!$info)
             {
@@ -181,7 +201,7 @@ class ProfileService
              return response()->json([
                 'code' => 200,
                 'status' => true,
-                'data'=>$info,
+                'data'=>$formate_info,
             ], 200);
 
         }catch(\Exception $e){
