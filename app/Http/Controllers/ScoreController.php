@@ -39,7 +39,7 @@ class ScoreController extends Controller
                     'activity_id' => $score->activity_id,
                     'question' => Question::where('id',$score->activity_id)->first()->question,
                     'activity_type' => $score->activity_type,
-                    'question_date'=>Post::where('question_id',$score->activity_id)
+                    'question_date'=>Post::with('question')
                                     ->where('user_id',auth()->id())
                                     ->whereDate('posting_date','<',$today)
                                     ->first()
