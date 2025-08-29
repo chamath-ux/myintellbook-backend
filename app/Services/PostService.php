@@ -26,9 +26,7 @@ class PostService{
 
     private function formatPostContent($post)
     {
-        $content =is_string($post->content) 
-            ? json_decode($post->content, true) 
-            : $post->content ?? [];
+        $content =$post->content;
         return [
             'id' => $content['id'],
             'question' => $content['question'],
