@@ -15,6 +15,7 @@ class ProfileController extends Controller
     public function __construct()
     {
         $this->profileService = new \App\Services\ProfileService();
+        $this->searchService = new \App\Services\SearchService();
     }
     public function insert(ProfileRequest $request){
             $profile = $this->profileService->insertProfile($request->validated());
@@ -144,6 +145,12 @@ class ProfileController extends Controller
     public function profileList()
     {
         $user = $this->profileService->profileList();
+        return $user;
+    }
+
+    public function search(Request $request)
+    {
+        $user = $this->searchService->searchKey($request->key);
         return $user;
     }
 }

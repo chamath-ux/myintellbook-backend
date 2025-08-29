@@ -48,4 +48,5 @@ Route::middleware('auth.token')->group(function () {
     Route::get('/notifications',[\App\Http\Controllers\NotificationsController::class,'getNotifications']);
     Route::get('/allNotifications',[\App\Http\Controllers\NotificationsController::class,'getAll']);
     Route::get('/topScores',[\App\Http\Controllers\ScoreController::class, 'topScores']);
+    Route::post('/search',[\App\Http\Controllers\ProfileController::class, 'search']);
 });
