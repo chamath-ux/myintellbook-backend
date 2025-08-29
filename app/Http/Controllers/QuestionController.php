@@ -33,7 +33,7 @@ class QuestionController extends Controller
                 'answer' => $request->answer,
                 'answer_status' => ($question->answer == $request->answer) ? 'correct' : 'incorrect',
             ]);
-            // auth()->user()->notify(new NewUserNotification("You have answer the today question! answer will be publish tommorrow"));
+            auth()->user()->notify(new NewUserNotification("You have answer the today question! answer will be publish tommorrow"));
 
         return response()->json(['code'=>200,'message' => 'Answer will publish tommorrow'], 200);
 
