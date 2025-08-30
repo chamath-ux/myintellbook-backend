@@ -7,6 +7,8 @@ Route::post('/verify-email', [\App\Http\Controllers\UserController::class, 'veri
 Route::post('/login', [\App\Http\Controllers\UserController::class, 'userLogin']);
 Route::post('/password/reset', [\App\Http\Controllers\UserController::class, 'passwordResetLink']);
 Route::post('/password/reset/{token}', [\App\Http\Controllers\UserController::class, 'passwordReset']);
+Route::post('auth/google', [\App\Http\Controllers\GoogleController::class, 'callback']);
+Route::get('auth/google/callback', [\App\Http\Controllers\GoogleController::class, 'callback']);
 
 
  
@@ -49,4 +51,5 @@ Route::middleware('auth.token')->group(function () {
     Route::get('/allNotifications',[\App\Http\Controllers\NotificationsController::class,'getAll']);
     Route::get('/topScores',[\App\Http\Controllers\ScoreController::class, 'topScores']);
     Route::post('/search',[\App\Http\Controllers\ProfileController::class, 'search']);
+   
 });

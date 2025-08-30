@@ -42,7 +42,7 @@ class UserObserver
             // Handle the case where no question is available
             // You might want to log this or take some other action     
         }
-        //  $user->notify(new NewUserNotification("Your profile has been updated!"));
+        $user->notify(new NewUserNotification("Hi $user->first_name, 'Welcome to MyIntellBook! We are excited to have you on board. Start your journey of knowledge and growth with us today.'"));
     }
 
     /**

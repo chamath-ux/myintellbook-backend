@@ -174,9 +174,14 @@ class ProfileService
     public function getGeneralInfo()
     {
         try{
-            $info = Profile::where('user_id',Auth::user()->id)->whereHas('user.workexperiances', function ($q) {
-                        $q->where('currently_working',1);
-                        })->first();
+            $info = Profile::where('user_id', Auth::id())
+                    ->where(function ($query) {
+                        $query->whereHas('user.workexperiances', function ($q) {
+                            $q->where('currently_working', 1);
+                        })
+                        ->orDoesntHave('user.workexperiances');
+                    })
+                    ->first();
 
             $formate_info = [
                 "id"=> $info->id,
@@ -189,9 +194,9 @@ class ProfileService
                 "profile_image"=> $info->profile_image,
                 "cover_image"=> $info->cover_image,
                 'profession'=>[
-                    "company"=> $info->user->workExperiances->first()->company,
-                    "location"=> $info->user->workExperiances->first()->location,
-                    "profession"=>$info->user->workExperiances->first()->title
+                    "company"=> optional($info->user->workExperiances->first())->company,
+                    "location"=> optional($info->user->workExperiances->first())->location,
+                    "profession"=>optional($info->user->workExperiances->first())->title
                 ]
             ];
 
@@ -206,7 +211,7 @@ class ProfileService
             ], 200);
 
         }catch(\Exception $e){
-            log::error('ProfileService @editGeneralInfo: '.$e->getMessage());
+            log::error('ProfileService @getGeneralInfo: '.$e->getMessage());
             return response()->json([
                 'code' => 500,
                 'status' => false,
